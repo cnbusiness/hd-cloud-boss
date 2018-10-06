@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>魔法信系统－－登陆页</title>
+  <!-- META -->
+  <meta name="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- /META -->
+  <!-- FONTS -->
+  <link rel="stylesheet" href="resources/css/font-awesome.min.css">
+  <!-- /FONTS -->
+  <!-- CSS -->
+  <link rel="stylesheet" href="resources/css/bootstrap.css">
+  <link rel="stylesheet" href="resources/css/login.css">
+</head>
+<body ng-controller="loginController">
+  <header>
+		<div class="container"><a href="#">魔法信系统</a></div>
+	</header>
+  <form class="login-form ng-pristine ng-valid ng-valid-maxlength" ng-submit="login()" verticle-align-middle style="display:none">
+		<h3>欢迎登录魔法信系统</h3>
+
+		<div class="input-group">
+			用户名:<input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-isolate-scope" set-focus="true" ng-model="username" ng-change="resetErrorMessage()" placeholder="用户名" aria-describedby="username-addon">
+		</div>
+		<div class="input-group errorMsg" ng-if="usernameErrorMessage" ng-bind="usernameErrorMessage"></div>
+		<!-- ngIf: usernameErrorMessage -->
+		<div class="input-group">
+			密码:<input class="form-control ng-pristine ng-untouched ng-valid ng-valid-maxlength" type="password" placeholder="密码" maxlength="16" ng-model="password" ng-change="resetErrorMessage()">
+		</div>
+		<!-- ngIf: otherErrorMessage -->
+		<div class="input-group errorMsg" ng-if="passwordErrorMessage" ng-bind="passwordErrorMessage"></div>
+		<div class="input-group errorMsg" ng-if="otherErrorMessage" ng-bind="otherErrorMessage"></div>
+	 
+		<div class="button-group">
+			<button class="login" type="submit">登录</button>
+		</div>
+	</form>
+<script src="resources/js/jquery.js"></script>	
+<script src="resources/js/md5.js"></script>
+<script src="resources/angular/angular.js"></script>
+<script src="resources/js/plugins.js"></script>
+ 
+<script>
+   var ROOT_URL = "";
+	angular.module('myApp', ['df.utils']).directive('setFocus', function() {
+		return {
+			restrict : 'A',
+			scope : {
+				setFocus : '='
+			},
+			link : function(scope, element) {
+				if (scope.setFocus) {
+					element[0].focus();
+				}
+			}
+		}
+	})
+	.directive('verticleAlignMiddle', function() {
+
+		function changePosition(element){
+			var doc = angular.element(document);
+			var docH, docW, eleH, eleW, minTop, minLeft, newTop, newLeft, goldenSection;
+
+			docH = document.documentElement.clientHeight;
+	 		docW = document.documentElement.clientWidth;
+			eleH = parseInt(element.css('height'));
+			eleW = parseInt(element.css('width'));
+
+			minTop = angular.element('header').height();
+			minLeft = 0;
+
+			newTop = docH * 0.5;
+			newLeft = docW * 0.618;
+
+			if(eleW > docW/2){
+				newLeft = docW * 0.5;
+			}
+
+			newTop -= eleW * 0.5;
+			newLeft -= eleH * 0.5;
+
+			if(newTop < minTop){
+				newTop = minTop;
+			}
+
+			if(newLeft < minLeft){
+				newLeft = minLeft;
+			}
+
+			element.animate({
+				top: newTop,
+				left: newLeft
+			}, 200);
+		}
+
+		return {
+			restrict : 'A',
+			link : function(scope, element) {
+				var timeoutId;
+				changePosition(element);
+
+				element.slideDown();
+
+				angular.element(window).on('resize', function(){
+					clearTimeout(timeoutId);
+					timeoutId = setTimeout(function(){
+						changePosition(element);
+					}, 300);
+				});
+			}
+		}
+	})
+	.controller('loginController', function($scope, $http) {
+		$scope.username = getRememberedUserName();
+		$scope.remember = true; // 默认记住用户名 
+
+		$scope.resetErrorMessage = resetErrorMessage;
+
+		$scope.login = login;
+
+
+		function login() {
+			var geetest_challenge = $(".geetest_challenge").val();
+			var geetest_validate = $(".geetest_validate").val();
+			var geetest_seccode = $(".geetest_seccode").val();
+			
+			if (!$scope.username) {
+				$scope.usernameErrorMessage = '用户名不能为空，请重新输入';
+				angular.element('[ng-model=username]').focus();
+				return false;
+			}
+			if (!$scope.password) {
+				$scope.passwordErrorMessage = '密码不能为空，请重新输入';
+				angular.element('[ng-model=password]').focus();
+				return false;
+			}
+			 
+			var request = $http({
+				url : ROOT_URL + '/boss/nofilter/login',
+				method : 'POST',
+				data : {
+					account : $scope.username,
+					password :$scope.password
+				},
+				headers : {
+					'Content-Type' : 'application/json'
+				}
+			});
+			request.success(function(data, status, headers, config) {
+				if(data.result){
+					saveToken(data.data.token);
+					saveUserId(data.data.userId);
+					saveLoginName(data.data.loginName);
+					
+					if(location.href.indexOf('redirect=') > -1){
+						location.href = ROOT_URL + data.data.url + '?redirect=' +unescape(location.href.replace(/.*?redirect=/, ''));
+					} else {
+						location.href = ROOT_URL + data.data.url;
+					}
+				}else{
+					var msg = '';
+					if(window.JSON){
+						msg = '，服务器返回错误信息为：'
+						msg += JSON.stringify(data);
+					}
+					$scope.otherErrorMessage = data.msg || '登陆失败';//网络异常，请稍后再试
+					if(msg){
+						console.error(msg);
+					}
+				}
+			});
+			request.error(function(data, status, headers, config) {
+				// 当响应以错误状态返回时调用
+				$scope.otherErrorMessage = "用户名密码错误";//网络异常，请稍后再试
+			})
+
+			request.finally(function(){
+				if($scope.remember){
+					rememberUserName($scope.username);
+				} else {
+					clearUserName();
+				}
+			});
+			return false;
+		}
+
+		function resetErrorMessage() {
+			$scope.passwordErrorMessage = '';
+			$scope.usernameErrorMessage = '';
+			$scope.otherErrorMessage = '';
+		}
+
+		function saveUserId(userId) {
+			localStorage.setItem('userId',userId);
+		}
+
+		function saveToken(token) {
+			localStorage.setItem('token',token);
+		}
+
+		function saveLoginName(loginName){
+			localStorage.setItem('loginName', loginName);
+		}
+	
+		
+		function getRememberedUserName(){
+			return localStorage.getItem('userName') || '';
+		}
+
+		function rememberUserName(userName){
+			localStorage.setItem('userName', userName);
+		}
+
+		function clearUserName(){
+			localStorage.removeItem('userName');
+		}
+	});
+</script>	
+</body>
+</html>

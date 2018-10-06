@@ -1,0 +1,235 @@
+@charset "UTF-8";
+html, body { width: 100%; height: 100%; }
+
+html { font-size: 14px; }
+
+* { padding: 0; margin: 0; box-sizing: border-box; }
+
+body { font-size: 62.5%; font-size: 14px; font-family: arial, sans-serif,'Microsoft YaHei'; line-height: 1.6; color: #808080; background: #efeff4; }
+
+ul, li { list-style-type: none; }
+
+img { width: 100%; }
+
+h1, h2, h3, h4, h5, h6 { font-weight: 400; }
+
+a { color: #529dfa; text-decoration: none; }
+
+a:active, a:hover { outline: 0; }
+
+.login-layer { max-width: 1080px; margin: 0 auto; background: url(../assets/images/login/login_bg.jpg) no-repeat; background-size: 100% 100%; height: 100%; overflow-y: scroll; text-align: center; color: #fff; padding-bottom: 12%; }
+
+.login-layer input, .login-layer a { color: #fff; }
+
+.login-layer .header { font-size: 46px; padding-top: 30px; text-align: center; font-weight: bold; }
+
+.login-layer .header img { display: inline-block; max-width: 50%; }
+
+.login-layer .content { width: 80%; margin: 0 auto; font-size: 40px; }
+
+.login-layer .content .login-module { text-align: left; }
+
+.login-layer .content .login-module li { padding: 20px 0; position: relative; height: 120px; }
+
+.login-layer .content .login-module li:first-child { display: -webkit-box; /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */ display: -moz-box; /* 老版本语法: Firefox (buggy) */ display: -ms-flexbox; /* 混合版本语法: IE 10 */ display: -webkit-flex; /* 新版本语法: Chrome 21+ */ display: flex; }
+
+.login-layer .content .login-module li input { background: #fff; border-radius: 8px; padding: 0 10px; height: 100%; color: #0e1a2a; width: 100%; }
+
+.login-layer .content .login-module .code { display: block; height: 100%; }
+
+.login-layer .content .login-module .code select { border: 0 none; background-color: #fff; color: #d0b485; line-height: auto; height: 100%; font-size: 46px; outline: 0; border-radius: 8px; margin-right: 10px; width: 80px; appearance: none; -moz-appearance: none; -webkit-appearance: none; background: #fff url(../assets/img/arrow.png) no-repeat right center; }
+
+.login-layer .content .login-module .area-code, .login-layer .content .login-module .arrow { color: #d0b485; }
+
+.login-layer .content .login-module .area-code { padding: 35px 60px 35px 0; margin-right: 20px; position: relative; }
+
+.login-layer .content .login-module .area-code .arrow { width: 0; height: 0; border-width: 8px 8px 0; border-style: solid; border-color: #d0b485 transparent transparent; position: absolute; right: 30px; top: 45%; }
+
+.login-layer .content .login-module .area-code:after { content: ''; width: 2px; height: 40%; background: #5f5e62; position: absolute; right: 0; top: 50%; transform: translate(0, -50%); }
+
+.login-layer .content .login-module .closed { padding: 0; height: 100%; width: 50px; color: #fff; position: absolute; right: 0; top: 0; }
+
+.login-layer .content .login-module .closed:after { content: "x"; color: #fff; padding: 0 12px; display: block; border-radius: 50%; background: #196c94; height: 47px; line-height: 47px; position: absolute; left: 0; top: 50%; transform: translate(0, -50%); }
+
+.login-layer .content .password-retrieval { text-align: right; padding: 5px 0; margin-bottom: 5%; }
+
+.login-layer .content .btn { height: 80px; line-height: 80px; font-size: 42px; padding: 0; color: #000100; margin-bottom: 30px; font-weight: bold; background-image: linear-gradient(to right, #e9ce5d, #f8f6bb); /*IE10*/ FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#e9ce5d,endColorStr=#f8f6bb); /*IE*/ background: -moz-linear-gradient(right, #e9ce5d, #f8f6bb); /*火狐*/ background: -webkit-gradient(linear, 0% 10%, 50% 10%, from(#e9ce5d), to(#f8f6bb)); /*谷歌*/ }
+
+.login-layer .footer { margin-top: 46.94%; }
+
+.reg-layer { width: 100%; height: 100%; background: url(../assets/img/findpsw_bg.jpg) no-repeat; background-size: cover; overflow-y: scroll; max-width: 1080px; margin: 0 auto; }
+
+.reg-layer .header { text-align: center; }
+
+.reg-layer .header img { max-width: 50%; }
+
+.reg-layer ::-webkit-input-placeholder { /* WebKit, Blink, Edge */ color: #ccc; }
+
+.reg-layer :-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #ccc; }
+
+.reg-layer ::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #ccc; }
+
+.reg-layer :-ms-input-placeholder { /* Internet Explorer 10-11 */ color: #ccc; }
+
+.reg-layer .header { text-align: center; padding: 3% 0; font-size: 50px; }
+
+.reg-layer .content { background: transparent; width: 90%; margin: 0 auto; font-size: 46px; }
+
+.reg-layer .content .reg-module { position: relative; }
+
+.reg-layer .content .reg-module li { display: -webkit-box; /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */ display: -moz-box; /* 老版本语法: Firefox (buggy) */ display: -ms-flexbox; /* 混合版本语法: IE 10 */ display: -webkit-flex; /* 新版本语法: Chrome 21+ */ display: flex; justify-content: space-between; -webkit-box-align: center; -moz-box-align: center; -ms-flex-align: center; /* IE 10 */ -webkit-align-items: center; -moz-align-items: center; -ms-align-items: center; -o-align-items: center; align-items: center; height: 80px; padding: 0 3%; margin-bottom: 40px; background: #fff; border-radius: 8px; }
+
+.reg-layer .content .reg-module li input { padding: 0 10px; height: 100%; color: #0e1a2a; }
+
+.reg-layer .content .reg-module li .area-code, .reg-layer .content .reg-module li .arrow { color: #d0b485; }
+
+.reg-layer .content .reg-module li .code { display: block; -webkit-flex: 1; -ms-flex: 1; flex: 1; -webkit-box-flex: 1; -moz-box-flex: 1; position: relative; }
+
+.reg-layer .content .reg-module li .code select { border: 0; background: transparent; width: 100%; color: #d0b485; height: 100%; font-size: 46px; outline: 0; appearance: none; -moz-appearance: none; -webkit-appearance: none; background: url(../assets/img/arrow.png) no-repeat right center; }
+
+.reg-layer .content .reg-module li .code .right { position: absolute; top: 0; right: 20px; line-height: 54px; }
+
+.reg-layer .content .reg-module li .area-code { padding: 15px 30px 15px 0; margin-right: 20px; position: relative; }
+
+.reg-layer .content .reg-module li .area-code .arrow { width: 0; height: 0; border-width: 8px 8px 0; border-style: solid; border-color: #d0b485 transparent transparent; position: absolute; right: 0; top: 40%; }
+
+.reg-layer .content .reg-module li .verification-code { width: 45%; color: #d4ba8f; text-align: right; line-height: 50px; position: absolute; right: 20px; }
+
+.reg-layer .content .reg-module .ico { width: 53px; height: 0; padding-bottom: 63px; display: block; margin-right: 10px; background-size: contain; background-repeat: no-repeat; }
+
+.reg-layer .content .reg-module .ico-areacode { background-image: url(../assets/images/reg/add.png); }
+
+.reg-layer .content .reg-module .ico-tel { background-image: url(../assets/images/reg/tel.png); }
+
+.reg-layer .content .reg-module .ico-pw { background-image: url(../assets/images/reg/pw.png); }
+
+.reg-layer .content .reg-module .ico-vc { background-image: url(../assets/images/reg/verification_code.png); width: 70px; }
+
+.reg-layer .footer { width: 90%; margin: 20px auto 0; text-align: center; }
+
+.reg-layer .footer .password-retrieval { font-size: 38px; color: #ccc; margin-top: 2%; }
+
+.reg-layer .footer .btn { height: 80px; line-height: 80px; font-size: 38px; padding: 0; color: #000100; margin-bottom: 30px; font-weight: bold; opacity: 1; background-image: linear-gradient(to right, #e9ce5d, #f8f6bb); /*IE10*/ FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#e9ce5d,endColorStr=#f8f6bb); /*IE*/ background: -moz-linear-gradient(right, #e9ce5d, #f8f6bb); /*火狐*/ background: -webkit-gradient(linear, 0% 10%, 50% 10%, from(#e9ce5d), to(#f8f6bb)); /*谷歌*/ }
+
+.wallet-layer { max-width: 1080px; margin: 0 auto; text-align: center; font-size: 38px; height: 100%; background: url(../assets/images/wallet_bg.png) no-repeat 50% 50%; background-size: cover; }
+
+.wallet-layer .prompt { margin: 0 20px; text-align: left; color: red; }
+
+.wallet-layer .binding { padding: 20px; }
+
+.wallet-layer .binding input, .wallet-layer .binding textarea { background: #fff; border-radius: 5px; padding: 10px; width: 100%; }
+
+.wallet-layer .wallet-num { overflow: hidden; }
+
+.wallet-layer .wallet-num .wallet-line { white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; }
+
+.wallet-layer .header { font-size: 50px; padding: 3%; text-align: center; }
+
+.wallet-layer .header img { max-width: 50%; }
+
+.wallet-layer .content { color: #fff; /*background: #fff;*/ padding: 15px 0; }
+
+.wallet-layer .line { height: 5px; width: 100%; background-image: linear-gradient(to right, #e9ce5d, #f8f6bb); FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#e9ce5d,endColorStr=#f8f6bb); background: -moz-linear-gradient(right, #e9ce5d, #f8f6bb); background: -webkit-gradient(linear, 0 10%, 50% 10%, from(#e9ce5d), to(#f8f6bb)); }
+
+.wallet-layer .content .top-con { overflow: hidden; padding: 3%; display: flex; display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+
+.wallet-layer .content .img { width: 17%; height: 0; padding-bottom: 17%; float: left; margin-right: 30px; margin-left: 20%; }
+
+.wallet-layer .content .con { overflow: hidden; text-align: left; }
+
+.wallet-layer .content .number { font-size: 70px; color: #fff; padding: 0 1%; margin-right: 5px; }
+
+.wallet-layer .account { font-size: 16px; color: #222; padding-bottom: 20px; }
+
+.wallet-layer .content-list li { width: 80%; margin: 6% auto; background: rgba(235, 206, 94, 0.2); padding: 15px 2% 15px 8%; text-align: left; overflow: hidden; display: -webkit-box; /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */ display: -moz-box; /* 老版本语法: Firefox (buggy) */ display: -ms-flexbox; /* 混合版本语法: IE 10 */ display: -webkit-flex; /* 新版本语法: Chrome 21+ */ display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: flex-start; justify-content: flex-start; -moz-box-pack: center; -webkit-moz-box-pack: center; margin-bottom: 30px; color: #fff; }
+
+.wallet-layer .content-list li:first-child .liimg { width: 12%; }
+
+.wallet-layer .content-list li .liimg { margin-right: 9%; width: 9%; }
+
+.wallet-layer .content-list li .currency { color: #e9ce5e; font-size: 160%; }
+
+/*.wallet-layer .content-list li:first-child {
+	border-bottom: 1px solid #e0e0ea
+}*/
+.color-gray { color: #999; }
+
+.wallet-layer .content-list li .number { font-size: 60px; }
+
+.wallet-layer .content-list li.wallet-btn { text-align: center; background: none; padding: 0; width: 60%; display: block; }
+
+.wallet-layer .footer { margin: 0 auto; width: 60%; }
+
+.wallet-layer .btn { font-weight: 700; color: #000; background-image: linear-gradient(to right, #e9ce5d, #f8f6bb); FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#e9ce5d,endColorStr=#f8f6bb); background: -moz-linear-gradient(right, #e9ce5d, #f8f6bb); background: -webkit-gradient(linear, 0 10%, 50% 10%, from(#e9ce5d), to(#f8f6bb)); border-radius: 2px; margin: 10px 0; }
+
+.btn { border: 0; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; text-align: center; cursor: pointer; padding: 2% 5%; font-size: 50px; color: #fff; }
+
+.btn-default { background-color: #d0b485; }
+
+.btn-block { display: block; }
+
+.btn-primary { border: 1px solid #fff; }
+
+.btn-info { -moz-opacity: 0.5; opacity: 0.5; }
+
+input { border: 0 none; width: 100%; background: none; outline: none; line-height: 38px; font-size: 46px; padding: 3% 0; }
+
+.download { display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; -webkit-box-pack: justify; -moz-justify-content: space-between; -webkit-justify-content: space-between; justify-content: space-between; -webkit-box-align: center; -moz-box-align: center; -ms-flex-align: center; /* IE 10 */ -webkit-align-items: center; -moz-align-items: center; -ms-align-items: center; -o-align-items: center; align-items: center; padding: 0 3%; }
+
+.download .d-btn { height: 80px; line-height: 80px; font-size: 25px; padding: 0; color: #000100; font-weight: bold; /* Firefox 3.6+ */ background: -moz-linear-gradient(left, #e9ce5d, #f8f6bb 50%, #e9ce5d); /* Safari 4-5, Chrome 1-9 */ background: -webkit-gradient(linear, left top, right top, from(#e9ce5d), color-stop(0.5, #f8f6bb), to(#e9ce5d)); /* Safari 5.1+, Chrome 10+ */ background: -webkit-linear-gradient(left, #e9ce5d, #f8f6bb 50%, #e9ce5d); /* Opera 11.10+ */ background: -o-linear-gradient(left, #e9ce5d, #f8f6bb 50%, #e9ce5d); display: block; border-radius: 5px; -webkit-transition: all .3s ease; transition: all .3s ease; width: 30%; display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; -webkit-justify-content: center; -moz-justify-content: center; -ms-justify-content: center; -o-justify-content: center; justify-content: center; -webkit-box-align: center; -moz-box-align: center; -ms-flex-align: center; /* IE 10 */ -webkit-align-items: center; -moz-align-items: center; -ms-align-items: center; -o-align-items: center; align-items: center; text-align: center; }
+
+.download .d-btn span { display: block; }
+
+.download .ico { display: block; width: 60px; height: 68px; line-height: 68px; }
+
+.download .ico.ios-ico { background: url(../assets/img/iphone.svg) no-repeat 0 0; background-size: cover; margin-right: 5px; }
+
+.download .ico.android-ico { background: url(../assets/img/android.svg) no-repeat 0 0; background-size: cover; margin-right: 5px; }
+
+.download .ico.google-ico { background: url(../assets/img/google_play.svg) no-repeat 0 0; background-size: cover; }
+
+.wxtip { background: rgba(0, 0, 0, 0.8); text-align: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 998; display: none; }
+
+.wxtip-icon { width: 67px; height: 67px; background: url(../assets/img/tip.png) no-repeat 0 0; background-size: cover; display: block; position: absolute; right: 20px; top: 20px; }
+
+.wxtip-txt { margin-top: 107px; color: #fff; font-size: 16px; line-height: 1.5; }
+
+@media only screen and (max-width: 678px) { .login-layer .content .login-module .code select { font-size: 16px; }
+  .reg-layer .content .reg-module li .code select { font-size: 16px; min-height: 54px; }
+  .login-layer .header { font-size: 16.8px; padding: 30px 0; }
+  .login-layer .content { font-size: 14px; }
+  .login-layer .content .login-module li { height: 80px; }
+  .login-layer .content .login-module .area-code { padding: 0 30px 0 0; margin-right: 10px; display: -webkit-box; /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */ display: -moz-box; /* 老版本语法: Firefox (buggy) */ display: -ms-flexbox; /* 混合版本语法: IE 10 */ display: -webkit-flex; /* 新版本语法: Chrome 21+ */ display: flex; -webkit-align-items: center; align-items: center; }
+  .login-layer .content .login-module .area-code .arrow { right: 10px; border-width: 4px 4px 0; }
+  .login-layer .content .login-module .closed { width: 20px; }
+  .login-layer .content .login-module .closed:after { content: "x"; padding: 0 5px; height: 16px; line-height: 16px; font-size: 12px; }
+  .login-layer .content .btn { height: 40px; line-height: 40px; font-size: 18px; }
+  .reg-layer .header { font-size: 16.8px; }
+  .reg-layer .content { font-size: 14px; }
+  .reg-layer .content .reg-module .ico { margin-right: 5px; width: 20px; padding-bottom: 23px; }
+  .reg-layer .content .reg-module li { height: 50px; margin-bottom: 20px; }
+  .reg-layer .content .reg-module li .area-code { padding: 15px 15px 15px 0; }
+  .reg-layer .content .reg-module li .area-code .arrow { border-width: 4px 4px 0; top: 45%; }
+  .reg-layer .footer .password-retrieval { font-size: 14px; }
+  .reg-layer .footer .btn { height: 50px; line-height: 50px; font-size: 18px; }
+  .wallet-layer { font-size: 14px; }
+  .wallet-layer .header { font-size: 16.8px; }
+  .wallet-layer .content .number { font-size: 20.72px; }
+  input { font-size: 14px; }
+  .btn { font-size: 16.8px; }
+  .download .d-btn { font-size: 12px; height: 40px; line-height: 40px; }
+  .download .ico { width: 30px; height: 34px; line-height: 34px; }
+  .download .ico.google-ico { height: 30px; } }
+
+@media only screen and (max-width: 479px) { .wallet-layer .content-list li .number { font-size: 19.6px; }
+  .download .d-btn { font-size: 12px; height: 40px; line-height: 40px; }
+  .download .ico { width: 30px; height: 34px; line-height: 34px; }
+  .download .ico.google-ico { height: 30px; } }
+
+.ahead { position: absolute; right: 4%; top: 8px; z-index: 3; overflow: hidden; }
+
+.ahead .c_lang { color: #d0ae3d; font-size: 14px; }
+
+.ahead .c_lang span { color: #544a2b; padding: 5px; }
+
+.ahead .c_lang .curr { color: #d0ae3d; }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="icon" href="G.ico" type="image/x-icon"/>  
+<!-- /META -->
+<!-- FONTS -->
+<link rel="stylesheet" href="../resources/css/font-awesome.min.css">
+<!-- /FONTS -->
+<!-- CSS -->
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/public.css">
+
+<base target="_parent">
+</head>
+<body>
+<div class=" bs-docs-sidenav">
+	<ul class="nav" id="nav">
+		<li><a href="../boss/user.html">用户管理</a></li>
+		<li><a href="../moment/topic.html">话题管理</a></li>
+		<li><a href="../moment/post.html">动态管理</a></li>
+<!-- 		<li><a href="../moment/activity.html">活动管理</a></li> -->
+		<li><a href="../moment/advert.html">广告管理</a></li>	
+	</ul>
+</div>
+<script src="../resources/js/jquery.js"></script>
+<script>
+ $(document).ready(function(){
+	 var adminType=localStorage['adminType'] || '';
+	 if(adminType!=1){
+		 $(".manager").remove();
+	 }
+	 
+	 var link=$("#nav li a");
+	 var index=0;
+	 var url=window.top.location.href.split("?")[0].split('/').pop();
+	 if(url){
+		 var len=link.length;
+		 for(var i=0;i<len;i++){
+			 if(url=="topic.html"){
+				 index=5;
+				 break;
+			 }else{
+				 if(link[i].href.indexOf(url)!=-1){
+					 index=i;
+					 break;
+				 }
+			 }
+		 }
+		 $("#nav li").eq(index).addClass("select").siblings("#nav li").removeClass("select");
+	 }
+ })
+</script>
+</body>
+</html>

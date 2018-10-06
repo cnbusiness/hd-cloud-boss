@@ -1,0 +1,108 @@
+.body{ margin-top: 51px; }
+
+
+
+/*  sidebar begin  */
+.bs-docs-sidenav a {
+  color: #b3b3b3;
+  border-bottom: solid 1px #3b4558;
+}
+
+.bs-docs-sidenav .open a{
+  color: #f8f8f8;
+  background-color: rgb(209, 194, 225);
+  padding-left: 10px;
+}
+
+.bs-docs-sidenav a:focus,
+.bs-docs-sidenav a:hover,
+.bs-docs-sidenav .nav a:hover,
+.bs-docs-sidenav .nav a:focus{
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.bs-docs-sidenav .nav .open a:hover,
+.bs-docs-sidenav .nav .open a{
+  background-color: #584882;
+  border-color: none;
+  border-bottom-color: #3b4558;
+}
+
+/*  层级关系  */
+.bs-docs-sidenav .nav{
+  background-color: #49546b;
+}
+
+.bs-docs-sidenav .nav .nav{
+  background-color: #323b4e;
+}
+
+.bs-docs-sidenav .nav .nav .nav{
+  background-color: #1d2536;
+}
+/*  /层级关系  */
+
+.bs-docs-sidenav .toggle .nav{
+  display:none;
+}
+.bs-docs-sidenav .toggle.open .nav{
+  display:block;
+}
+
+
+.bs-docs-sidenav .fa{
+  padding-right:0.2em;
+}
+
+.bs-docs-sidenav .fa.space{
+  margin-right: 1em;
+}
+
+/*  sidebar end  */
+
+
+
+@media (min-width: 768px){
+  .navbar-header{
+    float: none;
+  }
+}
+.nickname{
+  float: right;
+  padding: 14px;
+  color: #fff;
+}
+.nickname i{
+  font-style: normal;
+}
+.table{
+  margin-top:20px;
+}
+
+.ter{
+  text-align: right;
+}
+.title{
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+.fr{
+  float: right;
+}
+.red{
+  color: red;
+}
+.disable{
+  background: #e6e6e6;
+  padding-left: 10px;
+}
+.textwidth{
+  width:150px;
+  word-break: break-all;
+}
+.margint15{
+  margin-top:15px;
+}
+.modal-body{
+  padding:0;
+}

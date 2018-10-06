@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>魔法信系统</title>
+<!-- META -->
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- /META -->
+<!-- FONTS -->
+<link rel="stylesheet" href="../resources/css/font-awesome.min.css">
+<!-- /FONTS -->
+<!-- CSS -->
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/public.css">
+<script type="text/javascript">
+    function logOut(){
+        if(confirm('退出后需要重新登录，确定退出？')){
+          //调用注销接口
+          var xhr = createXHR();
+          xhr.open('get', '/boss/nofilter/logout', false);
+          xhr.send(null);
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+              if( (xhr.status>=200 && xhr.status<300) || xhr.status == 304 ){
+                console.log('注销成功', xhr.requseText);
+              }else{
+                console.log('request was unsuccessful:' + xhr.status);
+              }
+            }
+          }
+          //退出登录
+          location.href='../logout.html';
+        }
+      }
+    
+    function createXHR(){
+        if(typeof XMLHttpRequest != 'undefined'){ //ie7+
+          return new XMLHttpRequest();
+        }else if(typeof ActiveXObject != 'undefined'){
+          if(typeof arguments.callee.activeXString != 'string'){
+            var versions = ['MSXML2.XMLHttp.6.0', 'MSXML2.XMLHttp.3.0',
+            'MSXML2.XMLHttp'], i, len;
+            for(i=0,len=versions.length; i<len; i++){
+              try{
+                new ActiveXObject(versions[i]);
+                arguments.callee.activeXString = versions[i];
+                break;
+              }catch(ex){
+
+              }
+            }
+          }
+          return new ActiveXOBject(argument.callee.activeXString); //当前函数的属性 activeXString
+        }else{
+          throw new Error('no xhr object available.');
+        }
+   }
+    
+  </script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- 窄屏 展开菜单按钮 -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">魔法信系统</a>
+			<div ng-controller="MainController as menu">
+				<span class="nickname"><a style="margin-right: 15px"
+					href="javascript:void(0);" onclick="logOut()">退出</a></span> <span
+					class="nickname">当前登陆用户：<i ng-bind="loginName"></i></span>
+			</div>
+		</div>
+		<!-- /窄屏 展开菜单按钮 -->
+	</div>
+	<style>
+.showoutLayer {
+	display: block;
+}
+</style>
+	<div class="body container-fluid"
+		ng-controller="RecordController as vm">
+		<!-- 左侧导航 -->
+		<iframe type="text/html" src="../public/menu.html" class="nav bs-docs-sidenav col-sm-2" height="680" scrolling="no" frameborder="0" name="mainiframe" id="mainiframe" /></iframe>
+		<!-- /左侧导航 -->
+
+
+		<!-- 正文 -->
+		<div class="container-fluid left-border col-sm-10" >
+			<div class="form-horizontal col-sm-6" ng-form name="giftForm">
+			<br />
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>广告模块名</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" required ng-model="vm.moduleName">
+				</div>
+			</div>
+			 <div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>广告模块描述</label>
+				<div class="col-sm-6">
+					<textarea class="form-control" ng-model="vm.moduleRemark" rows="5" ></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>最大广告数</label>
+				<div class="col-sm-6">
+					<input type="number" class="form-control" required ng-model="vm.bannerTotals">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>banner索引标识符</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" required ng-model="vm.bannerCode">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>模块类型</label>
+				<div class="col-sm-6">
+					<select name ng-init="vm.type=1" class="form=control ng-pristine ng-untouched ng-valid ng-valid-required"
+						ng-model="vm.type" ng-options="type.value as type.name for type in [{name: '手机端banner广告',value:1},{name:'app推荐广告',value: 2}]">
+						<option value="number:1" label="手机端banner广告" selected="selected">手机端banner广告</option>
+						<option value="number:2" label="app推荐广告" >app推荐广告</option></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>广告时间类型</label>
+				<div class="col-sm-6">
+					<select name ng-init="vm.validType=1" required ng-change="vm.initPubSelfImage(vm.validType)" class="form=control ng-pristine ng-untouched ng-valid ng-valid-required"
+						ng-model="vm.validType" ng-options="validType.value as validType.name for validType in [{name: '永久有效',value:1},{name:'时间段内有效',value: 2}]">
+						<option value="number:1" label="永久有效" selected="selected">永久有效</option>
+						<option value="number:2" label="时间段内有效" >时间段内有效</option></select>
+				</div>
+			</div>
+				<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>起始时间</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" required ng-model="vm.pageStartTime">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>结束时间</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" required ng-model="vm.pageEndTime">
+				</div>
+			</div>
+			<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-9">
+				<button type="button"  ng-disabled="giftForm.$invalid"  class="btn btn-default" ng-click="vm.actual(vm);">确定</button>
+			</div>
+			</div>
+		</div>
+	</div>
+		<!-- /正文 -->
+
+	</div>
+	<script src="../resources/angular/angular.js"></script>
+	<script src="../resources/js/jquery.js"></script>
+	<script src="../resources/js/cms.auth.js"></script>
+	<script src="../resources/js/ng-file-upload/ng-file-upload-shim.js"></script>
+ 	<script src="../resources/js/ng-file-upload/ng-file-upload.js"></script>
+ 	<script src="../resources/js/bootstrap.js"></script>
+	<script>
+var app = angular.module('myApp', ['cms.auth']);
+app.factory('utils', ['$http', '$q','$filter',function($http, $q, $filter){
+    return {
+    	actual: actual
+    }
+
+    function actual(query){
+	    var deferred = $q.defer();
+	    var defaultQuery = {
+	    		moduleName: '',
+	    		moduleRemark: '',
+	    		bannerTotals: 0,
+	    		type: 0,
+	    		BannerCode: '',
+	    		validType:0,
+	    		pageStratTime:'',
+	    		pageEndTime:''
+         },q = {};
+         angular.forEach(defaultQuery, function(item, key){
+           q[key] = query[key] == undefined ? defaultQuery[key] : query[key];
+         })
+		$http.post('/advert/createAdModule', q)
+		   .then(function(response){  // 请求成功
+		     if(response.data.result){
+		       deferred.resolve(response.data);
+		     } else{
+		       deferred.reject(response.data)
+		     }
+		   })
+		   .catch(function(response){
+		     deferred.reject('网络故障');
+		   });
+	   return deferred.promise;
+	}
+    
+}]);
+
+app.controller("RecordController", ['utils', function(utils){
+    var vm = this;
+    vm.nav = 2;
+    vm.actual = actual;
+
+    
+    function actual(egc){
+	    utils.actual(egc).then(function(data){
+	       alert(data.msg);
+	       window.location.href="/moment/advert.html";
+	    }).catch(function(reason){
+	      alert(reason.msg);
+	    });
+	}
+    
+
+}]);
+</script>
+
+	<script>
+	app.controller('MainController', function($scope, $http) {
+		$scope.loginName = getLoginName();
+
+		function getLoginName() {
+			return localStorage['loginName'] || '';
+		}
+	});
+</script>
+</body>
+</html>

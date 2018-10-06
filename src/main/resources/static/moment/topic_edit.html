@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>魔法信系统</title>
+<!-- META -->
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- /META -->
+<!-- FONTS -->
+<link rel="stylesheet" href="../resources/css/font-awesome.min.css">
+<!-- /FONTS -->
+<!-- CSS -->
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/public.css">
+<script type="text/javascript">
+    function logOut(){
+        if(confirm('退出后需要重新登录，确定退出？')){
+          //调用注销接口
+          var xhr = createXHR();
+          xhr.open('get', '/boss/nofilter/logout', false);
+          xhr.send(null);
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+              if( (xhr.status>=200 && xhr.status<300) || xhr.status == 304 ){
+                console.log('注销成功', xhr.requseText);
+              }else{
+                console.log('request was unsuccessful:' + xhr.status);
+              }
+            }
+          }
+          //退出登录
+          location.href='../logout.html';
+        }
+      }
+    
+    function createXHR(){
+        if(typeof XMLHttpRequest != 'undefined'){ //ie7+
+          return new XMLHttpRequest();
+        }else if(typeof ActiveXObject != 'undefined'){
+          if(typeof arguments.callee.activeXString != 'string'){
+            var versions = ['MSXML2.XMLHttp.6.0', 'MSXML2.XMLHttp.3.0',
+            'MSXML2.XMLHttp'], i, len;
+            for(i=0,len=versions.length; i<len; i++){
+              try{
+                new ActiveXObject(versions[i]);
+                arguments.callee.activeXString = versions[i];
+                break;
+              }catch(ex){
+
+              }
+            }
+          }
+          return new ActiveXOBject(argument.callee.activeXString); //当前函数的属性 activeXString
+        }else{
+          throw new Error('no xhr object available.');
+        }
+   }
+    
+  </script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- 窄屏 展开菜单按钮 -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">魔法信系统</a>
+			<div ng-controller="MainController as menu">
+				<span class="nickname"><a style="margin-right: 15px"
+					href="javascript:void(0);" onclick="logOut()">退出</a></span> <span
+					class="nickname">当前登陆用户：<i ng-bind="loginName"></i></span>
+			</div>
+		</div>
+		<!-- /窄屏 展开菜单按钮 -->
+	</div>
+	<style>
+.showoutLayer {
+	display: block;
+}
+</style>
+	<div class="body container-fluid"
+		ng-controller="RecordController as vm">
+		<input type="hidden"  id="fileUploadDomain"/>
+		<!-- 左侧导航 -->
+		<iframe type="text/html" src="../public/menu.html" class="nav bs-docs-sidenav col-sm-2" height="680" scrolling="no" frameborder="0" name="mainiframe" id="mainiframe" /></iframe>
+		<!-- /左侧导航 -->
+
+
+		<!-- 正文 -->
+		<div class="container-fluid left-border col-sm-10" >
+			<div class="clearfix"></div>
+		<div class="form-horizontal col-sm-6" ng-form name="giftForm">
+			<br />
+			<input type="hidden"  ng-model="vm.id"/>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">话题来源 </label>
+				<div class="col-sm-4 form-control-static">{{vm.sourceType}}</div>
+				<label class="col-sm-2 control-label">发布时间 </label>
+				<div class="col-sm-4 form-control-static">{{vm.createTimeStr}}</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>话题主题</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" required ng-model="vm.topicName">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>话题图片</label>
+					<div class="col-sm-4 form-inline">
+		                 <input class="form-control" required ng-model="vm.topicUrl" disabled="disabled">
+		                 <input type="button" class="btn btn-default" ngf-select ngf-change="vm.uploadTopicImage($file)" value="上传话题图片"/>
+		                 <span ng-if="vm.topicUrl"><a target="_blank" ng-href="{{vm.domain}}{{vm.topicUrl}}">预览</a></span>
+				</div>
+			</div>
+<!-- 			 <div class="form-group"> -->
+<!-- 				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>首页图片</label> -->
+<!-- 				<div class="col-sm-4 form-inline"> -->
+<!-- 	                 <input class="form-control" ng-model="vm.homeUrl" disabled="disabled"> -->
+<!-- 	                 <input type="button" class="btn btn-default" ngf-select ngf-change="vm.uploadHomeImage($file)" value="上传首页图片"/> -->
+<!-- 	                 <span ng-if="vm.homeUrl"><a target="_blank" ng-href="{{vm.domain}}{{vm.homeUrl}}">预览</a></span> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			 <div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>话题简介</label>
+				<div class="col-sm-4">
+					<textarea class="form-control" ng-model="vm.topicDesc" rows="5" ></textarea>
+				</div>
+			</div>
+<!-- 			 <div class="form-group"> -->
+<!-- 				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>首页推荐</label> -->
+<!-- 				<div class="col-sm-4"> -->
+<!-- 					<label class="radio-inline"> <input type="radio" -->
+<!-- 						name="inlineRadioOptions11" value="1" data-toggle="modal" ng-model="vm.isHome" -->
+<!-- 					data-target="#myModalRecommend"> 开启 -->
+<!-- 					</label> <label class="radio-inline"> <input ng-model="vm.isHome" -->
+<!-- 						type="radio" name="inlineRadioOptions11" value="2"> 关闭 -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 			<div class="form-group"> -->
+<!-- 				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>精选推荐</label> -->
+<!-- 				<div class="col-sm-4"> -->
+<!-- 					<label class="radio-inline"> <input type="radio" -->
+<!-- 						name="inlineRadioOptions12" value="1" data-toggle="modal" ng-model="vm.displayType" -->
+<!-- 					data-target="#myModalRecommend"> 开启 -->
+<!-- 					</label> <label class="radio-inline"> <input ng-model="vm.displayType" -->
+<!-- 						type="radio" name="inlineRadioOptions12" value="2"> 关闭 -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 			<div class="form-group"> -->
+<!-- 				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>国家</label> -->
+<!-- 				<div class="col-sm-4"> -->
+<!-- 					<select ng-init="vm.countryCode='86'" ng-model="vm.countryCode" class="form-control" -->
+<!-- 						 required> -->
+<!-- 						<option value="86">86 中国</option> -->
+<!-- 							<option value="60">60 马来西亚</option> -->
+<!-- 							<option value="65">65 新加坡</option> -->
+<!-- 							<option value="852">852 香港</option> -->
+<!-- 							<option value="853">853 澳门</option> -->
+<!-- 							<option value="62">62 印度尼西亚</option> -->
+<!-- 							<option value="1">1 美国</option> -->
+<!-- 							<option value="7">7 俄罗斯</option> -->
+<!-- 							<option value="20">20 埃及</option> -->
+<!-- 							<option value="27">27 南非</option> -->
+<!-- 							<option value="30">30 希腊</option> -->
+<!-- 							<option value="31">31 荷兰</option> -->
+<!-- 							<option value="32">32 比利时</option> -->
+<!-- 							<option value="33">33 法国</option> -->
+<!-- 							<option value="34">34 西班牙</option> -->
+<!-- 							<option value="36">36 匈牙利</option> -->
+<!-- 							<option value="39">39 梵蒂冈</option> -->
+<!-- 							<option value="40">40 罗马尼亚</option> -->
+<!-- 							<option value="41">41 瑞士</option> -->
+<!-- 							<option value="43">43 奥地利</option> -->
+<!-- 							<option value="44">44 曼岛</option> -->
+<!-- 							<option value="45">45 北爱尔兰</option> -->
+<!-- 							<option value="46">46 瑞典</option> -->
+<!-- 							<option value="47">47 挪威</option> -->
+<!-- 							<option value="48">48 波兰</option> -->
+<!-- 							<option value="49">49 德国</option> -->
+<!-- 							<option value="51">51 秘鲁</option> -->
+<!-- 							<option value="52">52 墨西哥</option> -->
+<!-- 							<option value="53">53 古巴</option> -->
+<!-- 							<option value="54">54 阿根廷</option> -->
+<!-- 							<option value="55">55 巴西</option> -->
+<!-- 							<option value="56">56 智利</option> -->
+<!-- 							<option value="57">57 哥伦比亚</option> -->
+<!-- 							<option value="58">58 委内瑞拉</option> -->
+<!-- 							<option value="61">61 科科斯群岛</option> -->
+<!-- 							<option value="63">63 菲律宾</option> -->
+<!-- 							<option value="64">64 新西兰</option> -->
+<!-- 							<option value="66">66 泰国</option> -->
+<!-- 							<option value="81">81 日本</option> -->
+<!-- 							<option value="82">82 韩国</option> -->
+<!-- 							<option value="84">84 越南</option> -->
+<!-- 							<option value="90">90 土耳其</option> -->
+<!-- 							<option value="91">91 印度</option> -->
+<!-- 							<option value="92">92 巴基斯坦</option> -->
+<!-- 							<option value="93">93 阿富汗</option> -->
+<!-- 							<option value="94">94 斯里兰卡</option> -->
+<!-- 							<option value="95">95 缅甸</option> -->
+<!-- 							<option value="98">98 伊朗</option> -->
+<!-- 							<option value="212">212 摩洛哥</option> -->
+<!-- 							<option value="213">213 阿尔及利亚</option> -->
+<!-- 							<option value="216">216 突尼斯</option> -->
+<!-- 							<option value="218">218 利比亚</option> -->
+<!-- 							<option value="220">220 冈比亚</option> -->
+<!-- 							<option value="221">221 塞内加尔</option> -->
+<!-- 							<option value="222">222 毛里塔尼亚</option> -->
+<!-- 							<option value="223">223 马里</option> -->
+<!-- 							<option value="224">224 几内亚</option> -->
+<!-- 							<option value="225">225 科特迪瓦</option> -->
+<!-- 							<option value="226">226 布基纳法索</option> -->
+<!-- 							<option value="227">227 尼日尔</option> -->
+<!-- 							<option value="228">228 多哥</option> -->
+<!-- 							<option value="229">229 贝宁</option> -->
+<!-- 							<option value="230">230 毛里求斯</option> -->
+<!-- 							<option value="231">231 利比里亚</option> -->
+<!-- 							<option value="232">232 塞拉利昂</option> -->
+<!-- 							<option value="233">233 乌兹别克斯坦</option> -->
+<!-- 							<option value="234">234 尼日利亚</option> -->
+<!-- 							<option value="235">235 乍得</option> -->
+<!-- 							<option value="236">236 中非共和国</option> -->
+<!-- 							<option value="237">237 喀麦隆</option> -->
+<!-- 							<option value="238">238 塔拉法尔</option> -->
+<!-- 							<option value="239">239 圣多美和普林西比</option> -->
+<!-- 							<option value="241">241 加蓬</option> -->
+<!-- 							<option value="242">242 刚果民主共和国</option> -->
+<!-- 							<option value="243">243 扎伊尔</option> -->
+<!-- 							<option value="244">244 安哥拉</option> -->
+<!-- 							<option value="245">245 几内亚比绍</option> -->
+<!-- 							<option value="246">246 英属印度洋领地</option> -->
+<!-- 							<option value="247">247 阿森松岛</option> -->
+<!-- 							<option value="248">248 塞舌尔</option> -->
+<!-- 							<option value="249">249 苏丹</option> -->
+<!-- 							<option value="250">250 卢旺达</option> -->
+<!-- 							<option value="251">251 埃塞俄比亚</option> -->
+<!-- 							<option value="252">252 索马里</option> -->
+<!-- 							<option value="253">253 吉布提</option> -->
+<!-- 							<option value="254">254 肯尼亚</option> -->
+<!-- 							<option value="255">255 坦桑尼亚</option> -->
+<!-- 							<option value="256">256 乌干达</option> -->
+<!-- 							<option value="257">257 布隆迪</option> -->
+<!-- 							<option value="258">258 莫桑比克</option> -->
+<!-- 							<option value="260">260 赞比亚</option> -->
+<!-- 							<option value="261">261 马达加斯加</option> -->
+<!-- 							<option value="262">262 法属南部领地</option> -->
+<!-- 							<option value="263">263 津巴布韦</option> -->
+<!-- 							<option value="264">264 纳米比亚</option> -->
+<!-- 							<option value="265">265 马拉维</option> -->
+<!-- 							<option value="266">266 莱索托</option> -->
+<!-- 							<option value="267">267 博茨瓦纳</option> -->
+<!-- 							<option value="268">268 斯威士兰</option> -->
+<!-- 							<option value="269">269 科摩罗</option> -->
+<!-- 							<option value="290">290 圣赫勒拿</option> -->
+<!-- 							<option value="291">291 厄立特里亚</option> -->
+<!-- 							<option value="297">297 阿鲁巴</option> -->
+<!-- 							<option value="298">298 法罗群岛</option> -->
+<!-- 							<option value="299">299 格陵兰</option> -->
+<!-- 							<option value="327">327 哈萨克斯坦</option> -->
+<!-- 							<option value="331">331 迈利赛</option> -->
+<!-- 							<option value="350">350 直布罗陀</option> -->
+<!-- 							<option value="351">351 葡萄牙</option> -->
+<!-- 							<option value="352">352 卢森堡</option> -->
+<!-- 							<option value="353">353 爱尔兰</option> -->
+<!-- 							<option value="354">354 冰岛</option> -->
+<!-- 							<option value="355">355 阿尔巴尼亚</option> -->
+<!-- 							<option value="356">356 马耳他</option> -->
+<!-- 							<option value="357">357 塞浦路斯</option> -->
+<!-- 							<option value="358">358 奥兰群岛</option> -->
+<!-- 							<option value="359">359 保加利亚</option> -->
+<!-- 							<option value="370">370 立陶宛</option> -->
+<!-- 							<option value="371">371 拉脱维亚</option> -->
+<!-- 							<option value="372">372 爱沙尼亚</option> -->
+<!-- 							<option value="373">373 摩尔多瓦</option> -->
+<!-- 							<option value="374">374 亚美尼亚</option> -->
+<!-- 							<option value="375">375 白俄罗斯</option> -->
+<!-- 							<option value="376">376 莱塞斯卡尔德－恩戈尔达</option> -->
+<!-- 							<option value="377">377 摩纳哥</option> -->
+<!-- 							<option value="378">378 圣马力诺</option> -->
+<!-- 							<option value="380">380 乌克兰</option> -->
+<!-- 							<option value="381">381 泽蒙</option> -->
+<!-- 							<option value="385">385 克罗地亚</option> -->
+<!-- 							<option value="386">386 斯洛文尼亚</option> -->
+<!-- 							<option value="387">387 波斯尼亚和黑塞哥维那</option> -->
+<!-- 							<option value="389">389 马其顿</option> -->
+<!-- 							<option value="420">420 中捷克</option> -->
+<!-- 							<option value="421">421 斯洛伐克</option> -->
+<!-- 							<option value="423">423 列支敦士登</option> -->
+<!-- 							<option value="500">500 弗兰克群岛</option> -->
+<!-- 							<option value="501">501 伯利兹</option> -->
+<!-- 							<option value="502">502 危地马拉</option> -->
+<!-- 							<option value="503">503 萨尔瓦多</option> -->
+<!-- 							<option value="504">504 洪都拉斯</option> -->
+<!-- 							<option value="505">505 尼加拉瓜</option> -->
+<!-- 							<option value="506">506 哥斯达黎加</option> -->
+<!-- 							<option value="507">507 巴拿马</option> -->
+<!-- 							<option value="508">508 圣皮埃尔和米克隆群岛</option> -->
+<!-- 							<option value="509">509 海地</option> -->
+<!-- 							<option value="590">590 瓜德罗普</option> -->
+<!-- 							<option value="591">591 玻利维亚</option> -->
+<!-- 							<option value="592">592 圭亚那</option> -->
+<!-- 							<option value="593">593 厄瓜多尔</option> -->
+<!-- 							<option value="594">594 法属圭亚那</option> -->
+<!-- 							<option value="595">595 巴拉圭</option> -->
+<!-- 							<option value="596">596 马提尼克</option> -->
+<!-- 							<option value="597">597 苏里南</option> -->
+<!-- 							<option value="598">598 乌拉圭</option> -->
+<!-- 							<option value="670">670 利基卡</option> -->
+<!-- 							<option value="672">672 南极洲</option> -->
+<!-- 							<option value="673">673 文莱</option> -->
+<!-- 							<option value="674">674 瑙鲁</option> -->
+<!-- 							<option value="675">675 巴布亚新几内亚</option> -->
+<!-- 							<option value="676">676 汤加</option> -->
+<!-- 							<option value="677">677 所罗门群岛</option> -->
+<!-- 							<option value="678">678 彭纳马</option> -->
+<!-- 							<option value="679">679 斐济</option> -->
+<!-- 							<option value="680">680 帕劳群岛</option> -->
+<!-- 							<option value="681">681 瓦利斯和福图纳</option> -->
+<!-- 							<option value="682">682 库克群岛</option> -->
+<!-- 							<option value="683">683 纽埃</option> -->
+<!-- 							<option value="684">684 图阿马萨加</option> -->
+<!-- 							<option value="685">685 萨摩亚</option> -->
+<!-- 							<option value="686">686 基里巴斯</option> -->
+<!-- 							<option value="687">687 新喀里多尼亚</option> -->
+<!-- 							<option value="688">688 图瓦卢</option> -->
+<!-- 							<option value="689">689 法属波利尼西亚</option> -->
+<!-- 							<option value="690">690 托克劳</option> -->
+<!-- 							<option value="691">691 密克罗尼西亚</option> -->
+<!-- 							<option value="692">692 马绍尔群岛</option> -->
+<!-- 							<option value="850">850 朝鲜</option> -->
+<!-- 							<option value="855">855 柬埔寨</option> -->
+<!-- 							<option value="856">856 老挝</option> -->
+<!-- 							<option value="872">872 皮特凯恩</option> -->
+<!-- 							<option value="880">880 吉大港</option> -->
+<!-- 							<option value="886">886 台湾</option> -->
+<!-- 							<option value="960">960 马尔代夫</option> -->
+<!-- 							<option value="961">961 黎巴嫩</option> -->
+<!-- 							<option value="962">962 约旦</option> -->
+<!-- 							<option value="963">963 叙利亚</option> -->
+<!-- 							<option value="964">964 伊拉克</option> -->
+<!-- 							<option value="965">965 科威特</option> -->
+<!-- 							<option value="966">966 沙特阿拉伯</option> -->
+<!-- 							<option value="967">967 也门</option> -->
+<!-- 							<option value="968">968 阿曼</option> -->
+<!-- 							<option value="970">970 巴勒斯坦</option> -->
+<!-- 							<option value="971">971 阿拉伯联合酋长国</option> -->
+<!-- 							<option value="972">972 以色列</option> -->
+<!-- 							<option value="973">973 巴林</option> -->
+<!-- 							<option value="974">974 卡塔尔</option> -->
+<!-- 							<option value="975">975 不丹</option> -->
+<!-- 							<option value="976">976 蒙古</option> -->
+<!-- 							<option value="977">977 尼泊尔</option> -->
+<!-- 							<option value="992">992 塔吉克斯坦</option> -->
+<!-- 							<option value="993">993 土库曼斯坦</option> -->
+<!-- 							<option value="994">994 阿塞拜疆</option> -->
+<!-- 							<option value="995">995 乔治亚</option> -->
+<!-- 							<option value="1242">1242 巴哈马</option> -->
+<!-- 							<option value="1246">1246 巴巴多斯岛</option> -->
+<!-- 							<option value="1264">1264 安圭拉</option> -->
+<!-- 							<option value="1268">1268 安提瓜岛和巴布达</option> -->
+<!-- 							<option value="1284">1284 维尔京群岛，英属</option> -->
+<!-- 							<option value="1340">1340 维尔京群岛，美属</option> -->
+<!-- 							<option value="1345">1345 开曼群岛</option> -->
+<!-- 							<option value="1441">1441 百慕大</option> -->
+<!-- 							<option value="1649">1649 特克斯和凯克特斯群岛</option> -->
+<!-- 							<option value="1664">1664 蒙特塞拉特</option> -->
+<!-- 							<option value="1670">1670 北马里亚纳群岛</option> -->
+<!-- 							<option value="1671">1671 关岛</option> -->
+<!-- 							<option value="1758">1758 圣卢西亚</option> -->
+<!-- 							<option value="1767">1767 多米尼加</option> -->
+<!-- 							<option value="1784">1784 圣文森特和格林纳丁斯</option> -->
+<!-- 							<option value="1787">1787 波多黎各</option> -->
+<!-- 							<option value="1809">1809 格林纳达</option> -->
+<!-- 							<option value="1869">1869 圣基茨和尼维斯</option> -->
+<!-- 							<option value="1876">1876 牙买加</option> -->
+<!-- 							<option value="1890">1890 多米尼加共和国</option> -->
+<!-- 						</select> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 				<hr /> -->
+<!-- 				<div class="row col-sm-10"> -->
+<!-- 					<div class="col-sm-3"> -->
+<!-- 						动态量:<span>{{vm.reviewCnt}}</span> 贴 -->
+<!-- 					</div> -->
+<!-- 					<div class="col-sm-3"> -->
+<!-- 						评论量:<span>{{vm.commentCnt}}</span> 条 -->
+<!-- 					</div> -->
+<!-- 					<div class="col-sm-3"> -->
+<!-- 						点赞量:<span>{{vm.favoriteCnt}}</span> 次 -->
+<!-- 					</div> -->
+<!-- 					<div class="col-sm-3"> -->
+<!-- 						浏览量:<span>{{vm.browseCnt}}</span> 次 -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<div class="clearfix"></div>
+
+				<hr />
+				<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-9">
+					<button type="button"  ng-disabled="giftForm.$invalid"  class="btn btn-default" ng-click="vm.actual(vm);">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		<!-- /正文 -->
+
+	</div>
+	<script src="../resources/angular/angular.js"></script>
+	<script src="../resources/js/jquery.js"></script>
+	<script src="../resources/js/cms.auth.js"></script>
+	<script src="../resources/js/ng-file-upload/ng-file-upload-shim.js"></script>
+ 	<script src="../resources/js/ng-file-upload/ng-file-upload.js"></script>
+ 	<script src="../resources/js/bootstrap.js"></script>
+	<script>
+var app = angular.module('myApp', ['cms.auth','ngFileUpload']);
+app.factory('utils', ['$http', '$q','$filter',function($http, $q, $filter){
+    return {
+    	initDetail: initDetail,
+    	actual: actual,
+    	initUploadDomain: initUploadDomain
+    }
+
+    function initDetail() {
+		var deferred = $q.defer();
+		var id = 0;
+		location.search.replace(/.*id=(\d+).*/, function (m, $1) {
+			id = parseInt($1);
+		});
+		$http.get('/topic/detail?id=' + id)
+			.then(function (response) {  // 请求成功
+				if (response.data.result) {
+					deferred.resolve(response.data.data);
+				} else {
+					deferred.resolve([])
+				}
+		}).catch(function (response) {
+				deferred.reject(lang.sl.Network_fault || '网络故障');
+		});
+
+		return deferred.promise;
+	}
+    
+    function actual(query){
+	    var deferred = $q.defer();
+	    var defaultQuery = {
+	    		id: 0,
+	    		topicName: '',
+	    		topicUrl: '',
+	    		homeUrl: '',
+	    		topicDesc: '',
+	    		countryCode: '',
+	    		isHome: 0,
+	    		displayType: 0
+         },q = {};
+         angular.forEach(defaultQuery, function(item, key){
+           q[key] = query[key] == undefined ? defaultQuery[key] : query[key];
+         })
+		$http.put('/topic/update', q)
+		   .then(function(response){  // 请求成功
+		     if(response.data.result){
+		       deferred.resolve(response.data);
+		     } else{
+		       deferred.reject(response.data)
+		     }
+		   })
+		   .catch(function(response){
+		     deferred.reject('网络故障');
+		   });
+	   return deferred.promise;
+	}
+    
+    function initUploadDomain(){
+		var deferred = $q.defer();
+		$http.get('/topic/domain')
+		.then(function(response){  // 请求成功
+			if(response.data.result){
+				deferred.resolve(response.data.data);
+			} else{
+				deferred.resolve([])
+			}
+		})
+		.catch(function(response){
+			deferred.reject('网络故障');
+		});
+		return deferred.promise;
+	}
+}]);
+
+app.controller("RecordController", ['utils','$q','Upload', function(utils,$q,Upload){
+    var vm = this;
+    vm.nav = 2;
+    vm.actual = actual;
+    vm.initDetail = initDetail;
+    vm.initUploadDomain=initUploadDomain;
+    vm.uploadHomeImage = uploadHomeImage;
+    vm.uploadTopicImage = uploadTopicImage;
+    
+    var id = 0;
+	location.search.replace(/.*id=(\d+).*/, function (m, $1) {
+		id = parseInt($1);
+	});
+	if(id>0){
+		initDetail();
+	}
+	initUploadDomain();
+	//加载上传的域名
+	function initUploadDomain(){
+		utils.initUploadDomain().then(function(data){
+			$("#fileUploadDomain").val(data);
+			vm.uploadDomain=data.uploadDomain;
+		}).catch(function(){
+
+		});
+	}
+	
+	function initDetail() {
+		var deferred = $q.defer();
+		utils.initDetail().then(function (data) {
+			deferred.resolve(data);
+			angular.forEach(data, function (item, key) {
+				vm[key] = item;
+			})
+		}).catch(function () {
+			deferred.reject();
+		});
+		return deferred.promise;
+	}
+    function actual(egc){
+	    utils.actual(egc).then(function(data){
+	       alert(data.msg);
+	       window.location.href="/moment/topic.html";
+	    }).catch(function(reason){
+	      alert(reason.msg);
+	    });
+	}
+    
+  //上传话题图片
+	function uploadTopicImage(file){
+		var fileUploadDomain=$("#fileUploadDomain").val();
+		Upload.upload({
+	        url: fileUploadDomain+'upload/file',
+	        fields: {usageType:4,type:1},
+	        fileFormDataName: 'uploadFile',
+	        file: file
+	    }).progress(function (evt) {
+	        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+	        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+	    }).success(function (data, status, headers, config) {
+	        vm.topicUrl=data.data;
+	    	console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+	    }).error(function (data, status, headers, config) {
+	    	alert("上传失败");
+	        console.log('error status: ' + status);
+	    })
+	}
+  
+	//上传首页图片
+	function uploadHomeImage(file){
+		var fileUploadDomain=$("#fileUploadDomain").val();
+		Upload.upload({
+	        url: fileUploadDomain+'upload/file',
+	        fields: {usageType:4,type:1},
+	        fileFormDataName: 'uploadFile',
+	        file: file
+	    }).progress(function (evt) {
+	        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+	        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+	    }).success(function (data, status, headers, config) {
+	        vm.homeUrl=data.data;
+	    	console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+	    }).error(function (data, status, headers, config) {
+	    	alert("上传失败");
+	        console.log('error status: ' + status);
+	    })
+	}
+    
+}]);
+</script>
+
+	<script>
+	app.controller('MainController', function($scope, $http) {
+		$scope.loginName = getLoginName();
+
+		function getLoginName() {
+			return localStorage['loginName'] || '';
+		}
+	});
+</script>
+</body>
+</html>

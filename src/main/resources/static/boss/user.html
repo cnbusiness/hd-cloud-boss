@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>魔法信系统</title>
+<!-- META -->
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- /META -->
+<!-- FONTS -->
+<link rel="stylesheet" href="../resources/css/font-awesome.min.css">
+<!-- /FONTS -->
+<!-- CSS -->
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/public.css">
+<script type="text/javascript">
+    function logOut(){
+        if(confirm('退出后需要重新登录，确定退出？')){
+          //调用注销接口
+          var xhr = createXHR();
+          xhr.open('get', '/boss/nofilter/logout', false);
+          xhr.send(null);
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+              if( (xhr.status>=200 && xhr.status<300) || xhr.status == 304 ){
+                console.log('注销成功', xhr.requseText);
+              }else{
+                console.log('request was unsuccessful:' + xhr.status);
+              }
+            }
+          }
+          //退出登录
+          location.href='../logout.html';
+        }
+      }
+    
+    function createXHR(){
+        if(typeof XMLHttpRequest != 'undefined'){ //ie7+
+          return new XMLHttpRequest();
+        }else if(typeof ActiveXObject != 'undefined'){
+          if(typeof arguments.callee.activeXString != 'string'){
+            var versions = ['MSXML2.XMLHttp.6.0', 'MSXML2.XMLHttp.3.0',
+            'MSXML2.XMLHttp'], i, len;
+            for(i=0,len=versions.length; i<len; i++){
+              try{
+                new ActiveXObject(versions[i]);
+                arguments.callee.activeXString = versions[i];
+                break;
+              }catch(ex){
+
+              }
+            }
+          }
+          return new ActiveXOBject(argument.callee.activeXString); //当前函数的属性 activeXString
+        }else{
+          throw new Error('no xhr object available.');
+        }
+   }
+    
+  </script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- 窄屏 展开菜单按钮 -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">魔法信系统</a>
+			<div ng-controller="MainController as menu">
+				<span class="nickname"><a style="margin-right: 15px"
+					href="javascript:void(0);" onclick="logOut()">退出</a></span> <span
+					class="nickname">当前登陆用户：<i ng-bind="loginName"></i></span>
+			</div>
+		</div>
+		<!-- /窄屏 展开菜单按钮 -->
+	</div>
+	<style>
+.showoutLayer {
+	display: block;
+}
+</style>
+	<div class="body container-fluid"
+		ng-controller="RecordController as vm">
+		<!-- 左侧导航 -->
+		<iframe type="text/html" src="../public/menu.html" class="nav bs-docs-sidenav col-sm-2" height="680" scrolling="no" frameborder="0" name="mainiframe" id="mainiframe" /></iframe>
+		<!-- /左侧导航 -->
+
+
+		<!-- 正文 -->
+	<div class="container-fluid left-border col-sm-10">
+			<div class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+					用户Id：<input type="text" class="form-control" ng-model="vm.userId">
+				</div>
+				<div class="form-group">
+					昵称：<input type="text" class="form-control" ng-model="vm.nickName">
+				</div>
+				<div class="form-group">
+					手机号码：<input type="text" class="form-control" ng-model="vm.phone">
+				</div>
+				<div class="form-group">
+					<button type="button" class="btn btn-default" id="enterListener"
+						ng-click="vm.page=1;vm.recordList(vm)">搜索</button><br>
+				</div>
+			</div>
+			<table class="table table-bordered margint15">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>id</th>
+						<th>昵称</th>
+						<th>手机号码</th>
+						<th>性别</th>
+<!-- 						<th>状态</th> -->
+						<th>生日</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="list in vm.payRecordList">
+						<td>{{$index+1+(vm.currentPage-1)*10}}</td>
+						<td ng-bind="list.userId"></td>
+						<td ng-bind="list.nickName"></td>
+						<td ng-bind="list.phone"></td>
+						<td>
+							<span ng-if="list.sex == 0">保密</span>
+							<span ng-if="list.sex == 1">男</span>
+							<span ng-if="list.sex == 2">女</span>
+						</td>
+						<td ng-bind="list.birthday"></td>
+						<td>
+							<div class="btn-group">
+								<a stytle active-id="208" target="_blank" href="/boss/user_edit.html?userId={{list.userId}}" class="ng-isolate-scope">编辑</a>
+								<a stytle active-id="208" target="_blank" href="/boss/user_resetPwd.html?userId={{list.userId}}" class="ng-isolate-scope">重置密码</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th colspan="7">共<span style="text-decoration: underline;"
+							ng-bind="vm.totalItems"></span>条记录
+						</th>
+					</tr>
+				</tbody>
+			</table>
+			<ul class="pagination">
+				<li ng-click="vm.btnPrevious()"><a href="javascript:;"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a></li>
+				<li ng-repeat="(k, v) in vm.numPages"
+					ng-class="{'on': k==vm.currentPage-1}"
+					ng-click="vm.getNewList(k+1)"><a href="javascript:;">{{v.a}}</a></li>
+				<li ng-click="vm.btnNext()"><a href="javascript:;"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+
+		</div>
+
+		<!-- /正文 -->
+
+	</div>
+	<script src="../resources/angular/angular.js"></script>
+	<script src="../resources/js/cms.auth.js"></script>
+	<script src="../resources/js/jquery.js"></script>
+	<script>
+var app = angular.module('myApp', ['cms.auth']);
+app.factory('utils', ['$http', '$q','$filter',function($http, $q, $filter){
+    return {
+    	recordList: recordList
+    	
+    }
+
+    function recordList(query){
+        var deferred = $q.defer();
+        var defaultQuery = {
+        	userId:0,
+        	nickName:'',
+        	phone:'',
+	        page: 0
+	     },q = {};
+        angular.forEach(defaultQuery, function(item, key){
+          q[key] = query[key] == undefined ? defaultQuery[key] : query[key];
+        })
+        $http.get('/user/list', {params: q})
+        .then(function(response){  // 请求成功
+          if(response.data.result){
+            deferred.resolve({
+              totalItems:response.data.data.totalItems,
+              data:response.data.data.list
+            });
+          } else{
+            deferred.resolve([])
+          }
+        })
+        .catch(function(response){
+          deferred.reject('网络故障');
+        });
+
+        return deferred.promise;
+      }
+
+}]);
+
+app.controller("RecordController", ['utils', function(utils){
+    var vm = this;
+    vm.nav = 3;
+    vm.recordList = recordList;
+    vm.page = 1;
+     
+    //当前页面
+    vm.currentPage=1;
+    vm.numPages = [];
+
+    //上一页
+    vm.btnPrevious = function(){
+    	if(vm.currentPage <= 1){ return false;} //如果是第一页，不执行操作
+    	vm.getNewList(vm.currentPage - 1);
+    }
+
+    //下一页
+    vm.btnNext = function(){
+    	if(vm.currentPage >= vm.numPages.length){ return false;} //如果是最后一页，不执行操作
+    	vm.getNewList(vm.currentPage + 1);
+    }
+
+    //对应页面
+    vm.getNewList = function(currentPage){ //获取分页数据
+      if(!vm.currentPage){ return false;}else{ vm.currentPage = currentPage;}
+      utils.recordList({
+    	  page:vm.currentPage,
+      }).then(function(response){
+    	  vm.totalItems = response.totalItems;
+    	  vm.numPages  = (function(){
+              var i = Math.ceil(response.totalItems / 10);
+              var arr = [];
+              for(var j = 0; j < i; j++){
+            	  arr[j] = {a: j+1};
+              }
+              return arr;
+            }());
+          vm.payRecordList = response.data;
+      })
+    },
+    recordList({page:1});
+
+    function recordList(query){
+      utils.recordList(query).then(function(response){
+    	  vm.totalItems = response.totalItems;
+    	  vm.numPages  = (function(){
+              var i = Math.ceil(response.totalItems / 10);
+              var arr = [];
+              for(var j = 0; j < i; j++){
+            	  arr[j] = {a: j+1};
+              }
+              return arr;
+            }());
+          vm.payRecordList = response.data;
+      }).catch(function(){
+      });
+    }
+    
+
+    
+}]);
+</script>
+
+	<script>
+	app.controller('MainController', function($scope, $http) {
+		$scope.loginName = getLoginName();
+
+		function getLoginName() {
+			return localStorage['loginName'] || '';
+		}
+	});
+</script>
+</body>
+</html>

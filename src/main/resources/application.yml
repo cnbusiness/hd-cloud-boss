@@ -1,0 +1,67 @@
+spring.datasource.asc_user:
+  url: jdbc:mysql://120.77.204.36:3306/asc_user?autoReconnect=true&failOverReadOnly=false
+  username: hlb_user
+  password: rldb123@
+  type: com.zaxxer.hikari.HikariDataSource
+  driver-class-name: com.mysql.jdbc.Driver
+  maxActive: 20
+  initialSize: 1
+  maxWait: 60000
+  minIdle: 1
+  hikari:
+   connectionTimeout: 30000
+   idleTimeout: 600000
+   maxLifetime: 1800000
+   maximumPoolSize: 50
+   minimumIdle: 10
+   validationTimeout: 5000
+spring.datasource.asc_service:
+  url: jdbc:mysql://120.77.204.36:3306/asc_service?autoReconnect=true&failOverReadOnly=false
+  username: hlb_user
+  password: rldb123@
+  type: com.zaxxer.hikari.HikariDataSource
+  driver-class-name: com.mysql.jdbc.Driver
+  maxActive: 20
+  initialSize: 1
+  maxWait: 60000
+  minIdle: 1
+  hikari:
+   connectionTimeout: 30000
+   idleTimeout: 600000
+   maxLifetime: 1800000
+   maximumPoolSize: 50
+   minimumIdle: 10
+   validationTimeout: 5000
+spring.datasource.asc_biz:
+  url: jdbc:mysql://120.77.204.36:3306/asc_biz?autoReconnect=true&failOverReadOnly=false
+  username: hlb_user
+  password: rldb123@
+  type: com.zaxxer.hikari.HikariDataSource
+  driver-class-name: com.mysql.jdbc.Driver
+  maxActive: 20
+  initialSize: 1
+  maxWait: 60000
+  minIdle: 1
+  hikari:
+   connectionTimeout: 30000
+   idleTimeout: 600000
+   maxLifetime: 1800000
+   maximumPoolSize: 50
+   minimumIdle: 10
+   validationTimeout: 5000
+spring.redis: 
+  database: 0
+  host: 192.168.168.100
+  port: 6379
+  timeout: 0
+  password: 
+  pool:
+    max-active: 8
+    max-wait: -1
+    max-idle: 8
+    min-idle: 0
+token.expire.time:
+  time: 24
+file.upload.config:
+  domain: http://image.hedu.mobi/
+  uploadDomain: http://api.hedu.mobi/hd-cloud-thirdparty/

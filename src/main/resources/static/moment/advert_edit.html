@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>魔法信系统</title>
+<!-- META -->
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- /META -->
+<!-- FONTS -->
+<link rel="stylesheet" href="../resources/css/font-awesome.min.css">
+<!-- /FONTS -->
+<!-- CSS -->
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/public.css">
+<script type="text/javascript">
+    function logOut(){
+        if(confirm('退出后需要重新登录，确定退出？')){
+          //调用注销接口
+          var xhr = createXHR();
+          xhr.open('get', '/boss/nofilter/logout', false);
+          xhr.send(null);
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+              if( (xhr.status>=200 && xhr.status<300) || xhr.status == 304 ){
+                console.log('注销成功', xhr.requseText);
+              }else{
+                console.log('request was unsuccessful:' + xhr.status);
+              }
+            }
+          }
+          //退出登录
+          location.href='../logout.html';
+        }
+      }
+    
+    function createXHR(){
+        if(typeof XMLHttpRequest != 'undefined'){ //ie7+
+          return new XMLHttpRequest();
+        }else if(typeof ActiveXObject != 'undefined'){
+          if(typeof arguments.callee.activeXString != 'string'){
+            var versions = ['MSXML2.XMLHttp.6.0', 'MSXML2.XMLHttp.3.0',
+            'MSXML2.XMLHttp'], i, len;
+            for(i=0,len=versions.length; i<len; i++){
+              try{
+                new ActiveXObject(versions[i]);
+                arguments.callee.activeXString = versions[i];
+                break;
+              }catch(ex){
+
+              }
+            }
+          }
+          return new ActiveXOBject(argument.callee.activeXString); //当前函数的属性 activeXString
+        }else{
+          throw new Error('no xhr object available.');
+        }
+   }
+    
+  </script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- 窄屏 展开菜单按钮 -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">魔法信系统</a>
+			<div ng-controller="MainController as menu">
+				<span class="nickname"><a style="margin-right: 15px"
+					href="javascript:void(0);" onclick="logOut()">退出</a></span> <span
+					class="nickname">当前登陆用户：<i ng-bind="loginName"></i></span>
+			</div>
+		</div>
+		<!-- /窄屏 展开菜单按钮 -->
+	</div>
+	<style>
+.showoutLayer {
+	display: block;
+}
+</style>
+	<div class="body container-fluid"
+		ng-controller="RecordController as vm">
+		<input type="hidden"  id="fileUploadDomain"/>
+		<!-- 左侧导航 -->
+		<iframe type="text/html" src="../public/menu.html" class="nav bs-docs-sidenav col-sm-2" height="680" scrolling="no" frameborder="0" name="mainiframe" id="mainiframe" /></iframe>
+		<!-- /左侧导航 -->
+
+
+		<!-- 正文 -->
+		<div class="container-fluid left-border col-sm-10" >
+			<div class="clearfix"></div>
+		<div class="form-horizontal col-sm-6" ng-form name="giftForm">
+			<br />
+			<input type="hidden"  ng-model="vm.id"/>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>广告标题</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" required ng-model="vm.title">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>广告图片</label>
+				<div class="col-sm-4 form-inline">
+		            <input class="form-control" required ng-model="vm.picUrl" disabled="disabled">
+		            <input type="button" class="btn btn-default" ngf-select ngf-change="vm.uploadAdvertImage($file)" value="上传广告图片"/>
+				</div>
+			</div>
+			 <div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>广告描述</label>
+				<div class="col-sm-6">
+					<textarea class="form-control" ng-model="vm.desc" rows="5" ></textarea>
+				</div>
+			</div>
+<!-- 			<div class="form-group"> -->
+<!-- 				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>跳转链接</label> -->
+<!-- 					<div class="col-sm-2"><select class="form-control ng-valid ng-dirty ng-valid-parse ng-touched" ng-init="vm.linkId=0" ng-model="vm.linkId" ng-options="linkId.value as linkId.name for linkId in [{name: '无',value:0},{name:'一元购',value: 1},{name:'名品汇',value: 2},{name:'话题列表',value: 3},{name:'摇一摇',value: 4},{name:'附近的动态',value: 5},{name:'话题详情',value: 6},{name:'动态详情',value: 7},{name:'店铺首页',value: 8}]"> -->
+<!-- 					<option value="number:0" label="不跳转" >不跳转</option> -->
+<!-- 					<option value="number:1" label="一元购">一元购</option> -->
+<!-- 					<option value="number:2" label="名品汇">名品汇</option> -->
+<!-- 					<option value="number:3" label="话题列表">话题列表</option> -->
+<!-- 					<option value="number:4" label="摇一摇">摇一摇</option> -->
+<!-- 					<option value="number:5" label="附近的动态">附近的动态</option> -->
+<!-- 					<option value="number:6" label="话题详情">话题详情</option> -->
+<!-- 					<option value="number:7" label="动态详情">动态详情</option> -->
+<!-- 					<option value="number:8" label="店铺首页">店铺首页</option></select></div> -->
+<!-- 					<div class="col-sm-3 ng-scope" ng-if="vm.linkId==6 || vm.linkId==7 || vm.linkId==8"> -->
+<!-- 							<input type="text" class="form-control ng-pristine ng-valid ng-touched" placeholder="请输入链接地址 " ng-model="vm.linkUrl"> -->
+<!-- 					</div> -->
+<!-- 			</div> -->
+<!-- 			<div class="form-group"> -->
+<!-- 					<label class="col-sm-2 control-label"><span class="red">*</span>广告位置</label> -->
+<!-- 					<div class="col-sm-4"> -->
+<!-- 						<select class="form-control ng-pristine ng-valid ng-touched" ng-model="vm.adModuleId" ng-init="vm.adModuleId=1" ng-options="adModuleId.value as adModuleId.name for adModuleId in [{name:'首页',value:2},{name:'关注',value:3}]"> -->
+<!-- 						<option value="number:2" label="首页" >首页</option> -->
+<!-- 						<option value="number:3" label="关注">关注</option></select> -->
+<!-- 					</div> -->
+<!-- 			</div> -->
+<!-- 			 <div class="form-group"> -->
+<!-- 				<label for="inputEmail3" class="col-sm-2 control-label"><span class="red">*</span>统计点击信息</label> -->
+<!-- 				<div class="col-sm-4"> -->
+<!-- 					<label class="radio-inline"> <input type="radio" -->
+<!-- 						name="inlineRadioOptions11" value="1" data-toggle="modal" ng-model="vm.clickItype" -->
+<!-- 					data-target="#myModalRecommend"> 开启 -->
+<!-- 					</label> <label class="radio-inline"> <input ng-model="vm.clickItype" -->
+<!-- 						type="radio" name="inlineRadioOptions11" value="2"> 关闭 -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<div class="form-group form-inline">
+				<label class="col-sm-2 control-label"><span class="red">*</span>状态</label>
+					<div class="col-sm-1">
+					 <select class="form-control ng-pristine ng-untouched ng-valid" ng-init="vm.statusItype=2" ng-model="vm.statusItype" ng-options="statusItype.value as statusItype.name for statusItype in [ {name: '上架', value: 2}, {name: '下架', value:3}]">
+<!-- 						<option value="number:1" label="待上架">待上架</option> -->
+						<option value="number:2" label="上架" >上架</option>
+						<option value="number:3" label="下架">下架</option>
+					</select>
+				</div>
+			</div>
+<!-- 			<div class="form-group form-inline"> -->
+<!-- 				<label class="col-sm-2 control-label"><span class="red">*</span>展示区域</label> -->
+<!-- 					<div class="col-sm-1"> -->
+<!-- 					 <select class="form-control ng-pristine ng-untouched ng-valid" ng-init="vm.showType=2" ng-model="vm.showType" ng-options="showType.value as showType.name for showType in [{name:'城市', value: 1}, {name: '全国', value: 2}, {name: '默认', value:3}]"> -->
+<!-- 						<option value="number:1" label="城市">城市</option> -->
+<!-- 						<option value="number:2" label="全国" >全国</option> -->
+<!-- 						<option value="number:3" label="默认">默认</option> -->
+<!-- 					</select> -->
+<!-- 				</div> -->
+<!-- 				<div ng-if="vm.showType==1" ng-model="vm.cityId" last-id="vm.cityId" cms-country-select select-class-name="form-control" class="ng-pristine ng-untouched ng-valid ng-scope ng-isolate-scope"> -->
+<!-- 					<select ng-class="selectClassName" ng-repeat="id in idList" ng-model="idList[$index]" ng-change="event.updateModel(idList[$index],$index)" ng-options="item.cityId as item.name for item in dataCache[$index < 1 ? 0 :idList[$index - 1]]" -->
+<!-- 					class = "ng-pristine ng-untouched ng-valid ng-scope form-control"></select> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 				<hr /> -->
+<!-- 				<div class="row col-sm-10"> -->
+<!-- 					<div class="col-sm-5"> -->
+<!-- 						浏览量:<span>{{vm.viewCnt}}</span> 次 -->
+<!-- 					</div> -->
+<!-- 					<div class="col-sm-5"> -->
+<!-- 						点击量:<span>{{vm.clickCnt}}</span> 次 -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<div class="clearfix"></div>
+
+				<hr />
+				<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-9">
+					<button type="button"  ng-disabled="giftForm.$invalid"  class="btn btn-default" ng-click="vm.actual(vm);">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		<!-- /正文 -->
+
+	</div>
+	<script src="../resources/angular/angular.js"></script>
+	<script src="../resources/js/jquery.js"></script>
+	<script src="../resources/js/cms.auth.js"></script>
+	<script src="../resources/js/ng-file-upload/ng-file-upload-shim.js"></script>
+ 	<script src="../resources/js/ng-file-upload/ng-file-upload.js"></script>
+ 	<script src="../resources/js/bootstrap.js"></script>
+	<script>
+var app = angular.module('myApp', ['cms.auth','ngFileUpload']);
+app.factory('utils', ['$http', '$q','$filter',function($http, $q, $filter){
+    return {
+    	initDetail: initDetail,
+    	actual: actual,
+    	initUploadDomain: initUploadDomain
+    }
+
+    function initDetail() {
+		var deferred = $q.defer();
+		var id = 0;
+		location.search.replace(/.*id=(\d+).*/, function (m, $1) {
+			id = parseInt($1);
+		});
+		$http.get('/advert/detail?id=' + id)
+			.then(function (response) {  // 请求成功
+				if (response.data.result) {
+					deferred.resolve(response.data.data);
+				} else {
+					deferred.resolve([])
+				}
+		}).catch(function (response) {
+				deferred.reject(lang.sl.Network_fault || '网络故障');
+		});
+
+		return deferred.promise;
+	}
+    
+    function actual(query){
+	    var deferred = $q.defer();
+	    var defaultQuery = {
+	    		id:0,
+	    		title: '',
+	    		picUrl: '',
+	    		desc: '',
+	    		linkUrl: '',
+	    		linkId: 0,
+	    		adModuleId: 0,
+	    		statusItype:0,
+	    		clickItype:0,
+	    		showType:0,
+	    		countryCode:''
+         },q = {};
+         angular.forEach(defaultQuery, function(item, key){
+           q[key] = query[key] == undefined ? defaultQuery[key] : query[key];
+         })
+		$http.put('/advert/edit', q)
+		   .then(function(response){  // 请求成功
+		     if(response.data.result){
+		       deferred.resolve(response.data);
+		     } else{
+		       deferred.reject(response.data)
+		     }
+		   })
+		   .catch(function(response){
+		     deferred.reject('网络故障');
+		   });
+	   return deferred.promise;
+	}
+    
+    function initUploadDomain(){
+		var deferred = $q.defer();
+		$http.get('/advert/domain')
+		.then(function(response){  // 请求成功
+			if(response.data.result){
+				deferred.resolve(response.data.data);
+			} else{
+				deferred.resolve([])
+			}
+		})
+		.catch(function(response){
+			deferred.reject('网络故障');
+		});
+		return deferred.promise;
+	}
+}]);
+
+app.controller("RecordController", ['utils','$q','Upload', function(utils,$q,Upload){
+    var vm = this;
+    vm.nav = 2;
+    vm.actual = actual;
+    vm.initDetail = initDetail;
+    vm.initUploadDomain=initUploadDomain;
+    vm.uploadAdvertImage = uploadAdvertImage;
+    
+    var id = 0;
+	location.search.replace(/.*id=(\d+).*/, function (m, $1) {
+		id = parseInt($1);
+	});
+	if(id>0){
+		initDetail();
+	}
+	initUploadDomain();
+	//加载上传的域名
+	function initUploadDomain(){
+		utils.initUploadDomain().then(function(data){
+			$("#fileUploadDomain").val(data);
+			vm.uploadDomain=data.uploadDomain;
+		}).catch(function(){
+
+		});
+	}
+	
+	function initDetail() {
+		var deferred = $q.defer();
+		utils.initDetail().then(function (data) {
+			deferred.resolve(data);
+			angular.forEach(data, function (item, key) {
+				vm[key] = item;
+			})
+		}).catch(function () {
+			deferred.reject();
+		});
+		return deferred.promise;
+	}
+    function actual(egc){
+	    utils.actual(egc).then(function(data){
+	       alert(data.msg);
+	       window.location.href="/moment/advert.html";
+	    }).catch(function(reason){
+	      alert(reason.msg);
+	    });
+	}
+    
+  //上传广告图片
+	function uploadAdvertImage(file){
+		var fileUploadDomain=$("#fileUploadDomain").val();
+		Upload.upload({
+	        url: fileUploadDomain+'upload/file',
+	        fields: {usageType:4,type:1},
+	        fileFormDataName: 'uploadFile',
+	        file: file
+	    }).progress(function (evt) {
+	        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+	        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+	    }).success(function (data, status, headers, config) {
+	        vm.topicUrl=data.data;
+	    	console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+	    }).error(function (data, status, headers, config) {
+	    	alert("上传失败");
+	        console.log('error status: ' + status);
+	    })
+	}
+  
+    
+}]);
+</script>
+
+	<script>
+	app.controller('MainController', function($scope, $http) {
+		$scope.loginName = getLoginName();
+
+		function getLoginName() {
+			return localStorage['loginName'] || '';
+		}
+	});
+</script>
+</body>
+</html>
